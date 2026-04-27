@@ -386,6 +386,14 @@ button.icon-btn.icon-report-year::before {
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h16'/%3E%3Cpath d='M7 20v-5'/%3E%3Cpath d='M12 20V8'/%3E%3Cpath d='M17 20v-9'/%3E%3C/svg%3E");
 }
 
+button.icon-btn.icon-week::before {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='17' rx='2'/%3E%3Cpath d='M8 2v4M16 2v4M3 9h18'/%3E%3Cpath d='M7 13h3M14 13h3M7 17h3M14 17h3'/%3E%3C/svg%3E");
+}
+
+button.icon-btn.icon-pdf::before {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3h7l5 5v13H7z'/%3E%3Cpath d='M14 3v5h5'/%3E%3Cpath d='M9 17h6'/%3E%3Cpath d='M9 13h6'/%3E%3Cpath d='M9 9h2'/%3E%3C/svg%3E");
+}
+
 button.icon-btn.icon-calendar::before {
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M16 3v4M8 3v4M3 10h18'/%3E%3Cpath d='M12 13v5M9.5 15.5h5'/%3E%3C/svg%3E");
 }
@@ -422,6 +430,44 @@ button.icon-btn.icon-save::before {
   justify-content:flex-start;
 }
 
+.informe-semanal-dia {
+  margin:14px 0;
+  padding:10px;
+  border:1px solid #dde5ef;
+  border-radius:8px;
+  background:#fbfcfe;
+}
+
+.informe-semanal-dia h4 {
+  margin:0 0 8px 0;
+}
+
+.informe-semanal-tabla {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+}
+
+.informe-semanal-tabla th,
+.informe-semanal-tabla td {
+  padding:7px;
+  border-bottom:1px solid #e2e7ee;
+  text-align:left;
+  vertical-align:top;
+}
+
+.informe-semanal-tabla th {
+  width:190px;
+  background:#f4f7fb;
+}
+
+.informe-semanal-vacio {
+  padding:10px;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+  border-radius:8px;
+}
+
 @media (max-width: 640px) {
   .input-accion {
     align-items:stretch;
@@ -429,6 +475,174 @@ button.icon-btn.icon-save::before {
 
   .icon-actions {
     justify-content:flex-start;
+  }
+}
+
+@page {
+  size:A4;
+  margin:12mm;
+}
+
+@media print {
+  html,
+  body {
+    background:#fff !important;
+    margin:0 !important;
+    padding:0 !important;
+    color:#111 !important;
+    font-family: Arial, system-ui, sans-serif !important;
+  }
+
+  body > header,
+  main > section:not(#informePaciente),
+  .panel-superior,
+  #resumen,
+  #formRegistro,
+  .tabla-comida,
+  #btnGuardar,
+  #mensaje,
+  .icon-actions,
+  button,
+  input,
+  textarea,
+  select {
+    display:none !important;
+  }
+
+  main {
+    padding:0 !important;
+    margin:0 !important;
+  }
+
+  #informePaciente {
+    display:block !important;
+    background:#fff !important;
+    margin:0 !important;
+    padding:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+  }
+
+  #informePaciente.hidden {
+    display:block !important;
+  }
+
+  #tituloInforme {
+    font-size:22px !important;
+    margin:0 0 4px 0 !important;
+    color:#111 !important;
+  }
+
+  #subtituloInforme {
+    margin:0 0 14px 0 !important;
+    color:#333 !important;
+    font-size:13px !important;
+  }
+
+  .informe-cabecera {
+    display:block !important;
+    border-bottom:2px solid #222 !important;
+    padding-bottom:8px !important;
+    margin-bottom:12px !important;
+  }
+
+  .informe-grid {
+    display:grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap:6px !important;
+    margin:10px 0 !important;
+  }
+
+  .informe-card {
+    background:#fff !important;
+    border:1px solid #999 !important;
+    padding:7px !important;
+    border-radius:0 !important;
+    font-size:11px !important;
+  }
+
+  .informe-card strong {
+    font-size:17px !important;
+    color:#111 !important;
+  }
+
+  .informe-ok,
+  .informe-alerta {
+    background:#fff !important;
+    border:1px solid #999 !important;
+    color:#111 !important;
+    padding:8px !important;
+    margin:10px 0 !important;
+    border-radius:0 !important;
+  }
+
+  .informe-graficas {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+    margin:10px 0 !important;
+  }
+
+  .grafica-box {
+    border:1px solid #aaa !important;
+    background:#fff !important;
+    padding:6px !important;
+    border-radius:0 !important;
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  .grafica-box h4 {
+    margin:0 0 4px 0 !important;
+    font-size:12px !important;
+  }
+
+  canvas {
+    max-width:100% !important;
+    height:auto !important;
+  }
+
+  .tabla-informe,
+  .informe-semanal-tabla {
+    width:100% !important;
+    border-collapse:collapse !important;
+    font-size:11px !important;
+  }
+
+  .tabla-informe th,
+  .tabla-informe td,
+  .informe-semanal-tabla th,
+  .informe-semanal-tabla td {
+    border:1px solid #aaa !important;
+    padding:5px !important;
+    background:#fff !important;
+    color:#111 !important;
+    vertical-align:top !important;
+  }
+
+  .informe-semanal-dia {
+    margin:10px 0 !important;
+    padding:0 !important;
+    border:0 !important;
+    background:#fff !important;
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  .informe-semanal-dia h4 {
+    background:#eee !important;
+    border:1px solid #aaa !important;
+    padding:5px !important;
+    margin:0 !important;
+    font-size:13px !important;
+  }
+
+  .informe-semanal-vacio {
+    background:#fff !important;
+    border:1px solid #aaa !important;
+    border-top:0 !important;
+    padding:6px !important;
+    border-radius:0 !important;
   }
 }
 
@@ -471,7 +685,7 @@ button.icon-btn.icon-save::before {
       <tr>
         <td>Exportar datos</td>
         <td>
-          <button class="secondary icon-btn icon-export" onclick="exportarCifrado()" title="Exportar datos cifrados" aria-label="Exportar datos cifrados">
+          <button class="secondary icon-btn icon-export" onclick="exportarCifrado()" title="Exportar datos cifrados y elegir dónde guardar" aria-label="Exportar datos cifrados y elegir dónde guardar">
             <span class="sr-only">Exportar datos cifrados</span>
           </button>
         </td>
@@ -509,6 +723,21 @@ button.icon-btn.icon-save::before {
             </button>
             <button class="info icon-btn icon-report-year" onclick="generarInformeAnio()" title="Informe anual" aria-label="Informe anual">
               <span class="sr-only">Informe anual</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td>Informe médico semanal</td>
+        <td>
+          <div class="input-accion">
+            <input type="date" id="fechaInformeSemana" title="Elige cualquier día de la semana que quieres informar">
+            <button class="info icon-btn icon-week" onclick="generarInformeSemanaMedica()" title="Ver informe semanal médico" aria-label="Ver informe semanal médico">
+              <span class="sr-only">Ver informe semanal médico</span>
+            </button>
+            <button class="secondary icon-btn icon-pdf" onclick="generarPDFInformeSemanaMedica()" title="Crear PDF del informe semanal médico" aria-label="Crear PDF del informe semanal médico">
+              <span class="sr-only">Crear PDF del informe semanal médico</span>
             </button>
           </div>
         </td>
@@ -1120,10 +1349,43 @@ async function exportarCifrado(){
  };
 
  const blob=new Blob([JSON.stringify(out)],{type:"application/json"});
+ await guardarFicheroUsuario(blob, "paciente_cifrado.json");
+}
+
+async function guardarFicheroUsuario(blob, nombreFichero) {
+ const archivo = new File([blob], nombreFichero, { type: blob.type || "application/json" });
+
+ /*
+  En iPhone/iPad, navigator.share abre la hoja de compartir.
+  Desde ahí se puede elegir "Guardar en Archivos" y seleccionar carpeta.
+  En navegadores que no lo soporten, se mantiene la descarga tradicional.
+ */
+ if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+  try {
+   await navigator.share({
+    files: [archivo],
+    title: nombreFichero,
+    text: "Guardar copia cifrada del paciente"
+   });
+   return;
+  } catch (err) {
+   /*
+    Si el usuario cancela la hoja de compartir, no hacemos descarga automática
+    para evitar guardar el fichero en un sitio no elegido.
+   */
+   if (err && err.name === "AbortError") return;
+   console.warn("No se pudo abrir compartir. Se usará descarga tradicional.", err);
+  }
+ }
+
  const a=document.createElement("a");
- a.href=URL.createObjectURL(blob);
- a.download="paciente_cifrado.json";
+ const url=URL.createObjectURL(blob);
+ a.href=url;
+ a.download=nombreFichero;
+ document.body.appendChild(a);
  a.click();
+ a.remove();
+ setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 const importInputFusionar = document.getElementById("importInputFusionar");
@@ -1783,6 +2045,9 @@ pacienteSelect?.addEventListener("change", () => {
     const header = document.createElement("div");
     header.className = "calendario-header";
     header.textContent =actualizarTituloCalendario(fechaActualSeleccionada);
+  if (document.getElementById("fechaInformeSemana") && !document.getElementById("fechaInformeSemana").value) {
+    document.getElementById("fechaInformeSemana").value = fechaActualSeleccionada;
+  }
       /*nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1) + " " + year;*/
   
     // Semana
@@ -2012,6 +2277,7 @@ function renderInforme(tipo, registros, periodo) {
   const titulo = document.getElementById("tituloInforme");
   const subtitulo = document.getElementById("subtituloInforme");
 
+  ultimoInformeGenerado = tipo;
   seccion.classList.remove("hidden");
   titulo.textContent = tipo === "mes" ? "📈 Informe mensual del paciente" : "🗂️ Informe anual del paciente";
   subtitulo.textContent = `${nombrePacienteActivo()} · ${periodo}`;
@@ -2269,8 +2535,233 @@ function cerrarInforme() {
   document.getElementById("informePaciente")?.classList.add("hidden");
 }
 
+
+let ultimoInformeGenerado = "";
+
+function fechaBaseSemanaMedica() {
+  const f = document.getElementById("fechaInformeSemana")?.value
+    || document.getElementById("fecha")?.value
+    || fechaActualSeleccionada;
+  return f ? new Date(f + "T00:00:00") : new Date();
+}
+
+function formatoFechaISO(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+function inicioSemanaLunes(base) {
+  const d = new Date(base);
+  const dia = d.getDay();
+  const offset = dia === 0 ? -6 : 1 - dia;
+  d.setDate(d.getDate() + offset);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function finSemanaDomingo(inicio) {
+  const d = new Date(inicio);
+  d.setDate(d.getDate() + 6);
+  d.setHours(23, 59, 59, 999);
+  return d;
+}
+
+function sumarDiasFecha(d, dias) {
+  const x = new Date(d);
+  x.setDate(x.getDate() + dias);
+  return x;
+}
+
+function etiquetaFechaLarga(iso) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("es-ES", {
+    weekday:"long",
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric"
+  });
+}
+
+function textoPlano(v) {
+  return escaparHTML(valorCampo(v) || "—");
+}
+
+function bloqueComidaInforme(titulo, comida) {
+  comida = comida || {};
+  return `
+    <strong>${titulo}</strong><br>
+    1º plato: ${textoPlano(comida.p1)}<br>
+    Sobras 1º: ${textoPlano(comida.p1_sobras)}<br>
+    2º plato: ${textoPlano(comida.p2)}<br>
+    Sobras 2º: ${textoPlano(comida.p2_sobras)}<br>
+    Postre: ${textoPlano(comida.postre)}<br>
+    Pan: ${textoPlano(comida.pan)}<br>
+    Bebida: ${textoPlano(comida.bebida)}<br>
+    Saciedad: ${escaparHTML(traducirSaciedad(valorCampo(comida.saciedad)))}<br>
+    Lugar: ${escaparHTML(traducirLugarIngesta(valorCampo(comida.lugar)))}
+  `;
+}
+
+function bloqueEjercicioInforme(ejercicio) {
+  ejercicio = ejercicio || {};
+  return `
+    Tipo: ${escaparHTML(traducirEjercicio(valorCampo(ejercicio.tipo)))}<br>
+    Minutos: ${textoPlano(ejercicio.minutos)}<br>
+    Detalle: ${textoPlano(ejercicio.detalle)}
+  `;
+}
+
+function obtenerCitasSemana(pid, inicioISO, finISO) {
+  const citas = JSON.parse(localStorage.getItem("citas_paciente_" + pid) || "[]");
+  return citas
+    .filter(c => c && c.fecha >= inicioISO && c.fecha <= finISO)
+    .sort((a,b) => (a.fecha + " " + a.hora).localeCompare(b.fecha + " " + b.hora));
+}
+
+function generarInformeSemanaMedica() {
+  const pid = pacienteActivoObligatorio();
+  if (!pid) return;
+
+  const base = fechaBaseSemanaMedica();
+  const inicio = inicioSemanaLunes(base);
+  const fin = finSemanaDomingo(inicio);
+  const inicioISO = formatoFechaISO(inicio);
+  const finISO = formatoFechaISO(fin);
+
+  const registros = obtenerRegistros(pid)
+    .filter(r => r && r.fecha >= inicioISO && r.fecha <= finISO)
+    .sort((a,b) => a.fecha.localeCompare(b.fecha));
+
+  const citas = obtenerCitasSemana(pid, inicioISO, finISO);
+
+  renderInformeSemanaMedica(registros, citas, inicio, fin);
+}
+
+function renderInformeSemanaMedica(registros, citas, inicio, fin) {
+  const seccion = document.getElementById("informePaciente");
+  const contenido = document.getElementById("contenidoInforme");
+  const titulo = document.getElementById("tituloInforme");
+  const subtitulo = document.getElementById("subtituloInforme");
+
+  const inicioISO = formatoFechaISO(inicio);
+  const finISO = formatoFechaISO(fin);
+  const mapaRegistros = new Map(registros.map(r => [r.fecha, r]));
+  const a = analizarRegistros(registros);
+  const totalSaciedades = a.hambre + a.saciado + a.exceso;
+  const [emocionFinTop, emocionFinTopN] = dominante(a.emocionesFin);
+  const [saciedadTop, saciedadTopN] = dominante(a.saciedades);
+  const conclusion = registros.length
+    ? crearConclusionClinica(a, totalSaciedades, emocionFinTop)
+    : { tipo:"informe-alerta", texto:"no hay registros de comidas en esta semana. El informe puede enviarse solo como constancia de ausencia de registros." };
+
+  ultimoInformeGenerado = "semana-medica";
+  seccion.classList.remove("hidden");
+  titulo.textContent = "🩺 Informe semanal completo para la médica";
+  subtitulo.textContent = `${nombrePacienteActivo()} · Semana del ${inicioISO} al ${finISO}`;
+
+  const diasHTML = Array.from({ length:7 }, (_, i) => {
+    const fecha = formatoFechaISO(sumarDiasFecha(inicio, i));
+    const r = mapaRegistros.get(fecha);
+    const citasDia = citas.filter(c => c.fecha === fecha);
+    const citasTexto = citasDia.length
+      ? citasDia.map(c => `⏰ ${escaparHTML(c.hora || "—")}`).join("<br>")
+      : "—";
+
+    if (!r) {
+      return `
+        <div class="informe-semanal-dia">
+          <h4>${escaparHTML(etiquetaFechaLarga(fecha))}</h4>
+          <div class="informe-semanal-vacio">Sin registro diario guardado.${citasDia.length ? `<br>Citas: ${citasTexto}` : ""}</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="informe-semanal-dia">
+        <h4>${escaparHTML(etiquetaFechaLarga(fecha))}</h4>
+        <table class="informe-semanal-tabla">
+          <tr><th>Citas</th><td>${citasTexto}</td></tr>
+          <tr><th>Emoción al iniciar</th><td>${textoPlano(r.emocion1)}</td></tr>
+          <tr><th>Desayuno</th><td>${textoPlano(r.desayuno)}</td></tr>
+          <tr><th>Almuerzo</th><td>${textoPlano(r.almuerzo)}</td></tr>
+          <tr><th>Comida</th><td>${bloqueComidaInforme("Comida", r.comida)}</td></tr>
+          <tr><th>Merienda</th><td>${textoPlano(r.merienda)}</td></tr>
+          <tr><th>Cena</th><td>${bloqueComidaInforme("Cena", r.cena)}</td></tr>
+          <tr><th>Ejercicio físico</th><td>${bloqueEjercicioInforme(r.ejercicio)}</td></tr>
+          <tr><th>Emoción al finalizar</th><td>${textoPlano(r.emocion2)}</td></tr>
+        </table>
+      </div>
+    `;
+  }).join("");
+
+  contenido.innerHTML = `
+    <div class="informe-grid">
+      <div class="informe-card">Días registrados<strong>${a.total}</strong><span>de 7 días de la semana</span></div>
+      <div class="informe-card">Citas en la semana<strong>${citas.length}</strong><span>No se incluyen comentarios médicos internos</span></div>
+      <div class="informe-card">Emoción final dominante<strong>${escaparHTML(emocionFinTop)}</strong><span>${emocionFinTopN} día(s)</span></div>
+      <div class="informe-card">Saciedad dominante<strong>${escaparHTML(traducirSaciedad(saciedadTop))}</strong><span>${saciedadTopN} registro(s)</span></div>
+      <div class="informe-card">Días con ejercicio<strong>${a.diasConEjercicio}</strong><span>${a.minutosEjercicio} minutos totales</span></div>
+      <div class="informe-card">Ingestas fuera de casa<strong>${a.lugaresIngesta.fuera || 0}</strong><span>comidas/cenas fuera</span></div>
+    </div>
+
+    <div class="${conclusion.tipo}">
+      <strong>Lectura semanal:</strong> ${conclusion.texto}
+    </div>
+
+    <div class="informe-graficas">
+      <div class="grafica-box"><h4>Emoción al finalizar</h4><canvas id="graficaSemanaEmocionFin" width="600" height="280"></canvas></div>
+      <div class="grafica-box"><h4>Saciedad comida/cena</h4><canvas id="graficaSemanaSaciedad" width="600" height="280"></canvas></div>
+      <div class="grafica-box"><h4>Ejercicio físico</h4><canvas id="graficaSemanaEjercicio" width="600" height="280"></canvas></div>
+      <div class="grafica-box"><h4>Lugar de comida/cena</h4><canvas id="graficaSemanaLugar" width="600" height="280"></canvas></div>
+    </div>
+
+    <h4>Resumen de hábitos de la semana</h4>
+    <table class="tabla-informe">
+      <tr><th>Indicador</th><th>Resultado</th></tr>
+      <tr><td>Emoción al iniciar</td><td>${objetoATexto(a.emocionesInicio)}</td></tr>
+      <tr><td>Emoción al finalizar</td><td>${objetoATexto(a.emocionesFin)}</td></tr>
+      <tr><td>Saciedad</td><td>${objetoATexto(traducirClavesSaciedad(a.saciedades))}</td></tr>
+      <tr><td>Postres</td><td>${objetoATexto(a.postres)}</td></tr>
+      <tr><td>Pan</td><td>${objetoATexto(a.panes)}</td></tr>
+      <tr><td>Bebidas</td><td>${objetoATexto(a.bebidas)}</td></tr>
+      <tr><td>Lugar comida/cena</td><td>${objetoATexto(traducirClavesLugarIngesta(a.lugaresIngesta))}</td></tr>
+      <tr><td>Sobras anotadas</td><td>${a.sobras} campo(s) de sobras en ${a.comidasConSobras} día(s)</td></tr>
+      <tr><td>Ejercicio</td><td>${objetoATexto(traducirClavesEjercicio(a.ejercicios))} · ${a.minutosEjercicio} minutos</td></tr>
+    </table>
+
+    <h4>Detalle completo día a día</h4>
+    ${diasHTML}
+  `;
+
+  dibujarBarras("graficaSemanaEmocionFin", a.emocionesFin, "día(s)");
+  dibujarBarras("graficaSemanaSaciedad", traducirClavesSaciedad(a.saciedades), "respuesta(s)");
+  dibujarBarras("graficaSemanaEjercicio", traducirClavesEjercicio(a.ejercicios), "día(s)");
+  dibujarBarras("graficaSemanaLugar", traducirClavesLugarIngesta(a.lugaresIngesta), "ingesta(s)");
+
+  seccion.scrollIntoView({ behavior:"smooth", block:"start" });
+}
+
+
 function imprimirInforme() {
   window.print();
+}
+
+function generarPDFInformeSemanaMedica() {
+  generarInformeSemanaMedica();
+  if (ultimoInformeGenerado !== "semana-medica") return;
+
+  document.body.classList.add("imprimiendo-informe-semanal");
+
+  const limpiarModoImpresion = () => {
+    document.body.classList.remove("imprimiendo-informe-semanal");
+    window.removeEventListener("afterprint", limpiarModoImpresion);
+  };
+
+  window.addEventListener("afterprint", limpiarModoImpresion);
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(limpiarModoImpresion, 1000);
+  }, 250);
 }
 </script>
 
