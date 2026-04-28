@@ -683,6 +683,19 @@ button.icon-btn.icon-save::before {
   pointer-events: none;
 }
 
+.rango-fechas-informe input {
+  min-width: 135px;
+}
+@media (max-width: 640px) {
+  .rango-fechas-informe {
+    flex-wrap: wrap;
+  }
+  .rango-fechas-informe input {
+    min-width: 0;
+    width: calc(50% - 4px);
+  }
+}
+
 </style>
 </head>
 
@@ -766,15 +779,16 @@ button.icon-btn.icon-save::before {
       </tr>
 
       <tr>
-        <td>Informe médico semanal</td>
+        <td>Informe médico por fechas</td>
         <td>
-          <div class="input-accion">
-            <input type="date" id="fechaInformeSemana" title="Elige cualquier día de la semana que quieres informar">
-            <button class="info icon-btn icon-week" onclick="generarInformeSemanaMedica()" title="Ver informe semanal médico" aria-label="Ver informe semanal médico">
-              <span class="sr-only">Ver informe semanal médico</span>
+          <div class="input-accion rango-fechas-informe">
+            <input type="date" id="fechaInformeInicio" title="Fecha inicial del informe">
+            <input type="date" id="fechaInformeFin" title="Fecha final del informe">
+            <button class="info icon-btn icon-week" onclick="generarInformeSemanaMedica()" title="Ver informe médico por fechas" aria-label="Ver informe médico por fechas">
+              <span class="sr-only">Ver informe médico por fechas</span>
             </button>
-            <button class="secondary icon-btn icon-pdf" onclick="generarPDFInformeSemanaMedica()" title="Crear PDF del informe semanal médico" aria-label="Crear PDF del informe semanal médico">
-              <span class="sr-only">Crear PDF del informe semanal médico</span>
+            <button class="secondary icon-btn icon-pdf" onclick="generarPDFInformeSemanaMedica()" title="Crear PDF del informe médico por fechas" aria-label="Crear PDF del informe médico por fechas">
+              <span class="sr-only">Crear PDF del informe médico por fechas</span>
             </button>
           </div>
         </td>
@@ -2097,8 +2111,11 @@ pacienteSelect?.addEventListener("change", () => {
     const header = document.createElement("div");
     header.className = "calendario-header";
     header.textContent =actualizarTituloCalendario(fechaActualSeleccionada);
-  if (document.getElementById("fechaInformeSemana") && !document.getElementById("fechaInformeSemana").value) {
-    document.getElementById("fechaInformeSemana").value = fechaActualSeleccionada;
+  if (document.getElementById("fechaInformeInicio") && !document.getElementById("fechaInformeInicio").value) {
+    document.getElementById("fechaInformeInicio").value = fechaActualSeleccionada;
+  }
+  if (document.getElementById("fechaInformeFin") && !document.getElementById("fechaInformeFin").value) {
+    document.getElementById("fechaInformeFin").value = fechaActualSeleccionada;
   }
       /*nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1) + " " + year;*/
   
@@ -2590,31 +2607,13 @@ function cerrarInforme() {
 
 let ultimoInformeGenerado = "";
 
-function fechaBaseSemanaMedica() {
-  const f = document.getElementById("fechaInformeSemana")?.value
-    || document.getElementById("fecha")?.value
-    || fechaActualSeleccionada;
+function fechaSeleccionadaParaInforme() {
+  const f = document.getElementById("fecha")?.value || fechaActualSeleccionada;
   return f ? new Date(f + "T00:00:00") : new Date();
 }
 
 function formatoFechaISO(d) {
   return d.toISOString().slice(0, 10);
-}
-
-function inicioSemanaLunes(base) {
-  const d = new Date(base);
-  const dia = d.getDay();
-  const offset = dia === 0 ? -6 : 1 - dia;
-  d.setDate(d.getDate() + offset);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-function finSemanaDomingo(inicio) {
-  const d = new Date(inicio);
-  d.setDate(d.getDate() + 6);
-  d.setHours(23, 59, 59, 999);
-  return d;
 }
 
 function sumarDiasFecha(d, dias) {
@@ -2631,6 +2630,50 @@ function etiquetaFechaLarga(iso) {
     month:"2-digit",
     year:"numeric"
   });
+}
+
+function inicializarRangoInforme() {
+  const inicioInput = document.getElementById("fechaInformeInicio");
+  const finInput = document.getElementById("fechaInformeFin");
+  if (!inicioInput || !finInput) return;
+
+  const base = fechaSeleccionadaParaInforme();
+  const hoyISO = formatoFechaISO(base);
+
+  if (!inicioInput.value) inicioInput.value = hoyISO;
+  if (!finInput.value) finInput.value = hoyISO;
+}
+
+function rangoFechasInforme() {
+  inicializarRangoInforme();
+
+  const inicioInput = document.getElementById("fechaInformeInicio");
+  const finInput = document.getElementById("fechaInformeFin");
+
+  const inicioISO = inicioInput?.value;
+  const finISO = finInput?.value;
+
+  if (!inicioISO || !finISO) {
+    alert("Selecciona fecha inicial y fecha final para el informe");
+    return null;
+  }
+
+  if (inicioISO > finISO) {
+    alert("La fecha inicial no puede ser posterior a la fecha final");
+    return null;
+  }
+
+  const inicio = new Date(inicioISO + "T00:00:00");
+  const fin = new Date(finISO + "T00:00:00");
+  const dias = Math.round((fin - inicio) / 86400000) + 1;
+
+  if (dias > 62) {
+    if (!confirm("Has seleccionado más de 62 días. El informe puede ser muy largo. ¿Continuar?")) {
+      return null;
+    }
+  }
+
+  return { inicio, fin, inicioISO, finISO, dias };
 }
 
 function textoPlano(v) {
@@ -2662,40 +2705,41 @@ function bloqueEjercicioInforme(ejercicio) {
   `;
 }
 
-function obtenerCitasSemana(pid, inicioISO, finISO) {
+function obtenerCitasPeriodo(pid, inicioISO, finISO) {
   const citas = JSON.parse(localStorage.getItem("citas_paciente_" + pid) || "[]");
   return citas
     .filter(c => c && c.fecha >= inicioISO && c.fecha <= finISO)
     .sort((a,b) => (a.fecha + " " + a.hora).localeCompare(b.fecha + " " + b.hora));
 }
 
+/*
+  Se conserva el nombre de la función para no cambiar los onclick existentes,
+  pero ahora genera el informe por rango de fechas, no por semana cerrada.
+*/
 function generarInformeSemanaMedica() {
   const pid = pacienteActivoObligatorio();
   if (!pid) return;
 
-  const base = fechaBaseSemanaMedica();
-  const inicio = inicioSemanaLunes(base);
-  const fin = finSemanaDomingo(inicio);
-  const inicioISO = formatoFechaISO(inicio);
-  const finISO = formatoFechaISO(fin);
+  const rango = rangoFechasInforme();
+  if (!rango) return;
 
   const registros = obtenerRegistros(pid)
-    .filter(r => r && r.fecha >= inicioISO && r.fecha <= finISO)
+    .filter(r => r && r.fecha >= rango.inicioISO && r.fecha <= rango.finISO)
     .sort((a,b) => a.fecha.localeCompare(b.fecha));
 
-  const citas = obtenerCitasSemana(pid, inicioISO, finISO);
+  const citas = obtenerCitasPeriodo(pid, rango.inicioISO, rango.finISO);
 
-  renderInformeSemanaMedica(registros, citas, inicio, fin);
+  renderInformeSemanaMedica(registros, citas, rango);
 }
 
-function renderInformeSemanaMedica(registros, citas, inicio, fin) {
+function renderInformeSemanaMedica(registros, citas, rango) {
   const seccion = document.getElementById("informePaciente");
   const contenido = document.getElementById("contenidoInforme");
   const titulo = document.getElementById("tituloInforme");
   const subtitulo = document.getElementById("subtituloInforme");
 
-  const inicioISO = formatoFechaISO(inicio);
-  const finISO = formatoFechaISO(fin);
+  const inicioISO = rango.inicioISO;
+  const finISO = rango.finISO;
   const mapaRegistros = new Map(registros.map(r => [r.fecha, r]));
   const a = analizarRegistros(registros);
   const totalSaciedades = a.hambre + a.saciado + a.exceso;
@@ -2703,15 +2747,15 @@ function renderInformeSemanaMedica(registros, citas, inicio, fin) {
   const [saciedadTop, saciedadTopN] = dominante(a.saciedades);
   const conclusion = registros.length
     ? crearConclusionClinica(a, totalSaciedades, emocionFinTop)
-    : { tipo:"informe-alerta", texto:"no hay registros de comidas en esta semana. El informe puede enviarse solo como constancia de ausencia de registros." };
+    : { tipo:"informe-alerta", texto:"no hay registros de comidas en el periodo seleccionado. El informe puede enviarse solo como constancia de ausencia de registros." };
 
   ultimoInformeGenerado = "semana-medica";
   seccion.classList.remove("hidden");
-  titulo.textContent = "🩺 Informe semanal completo para la médica";
-  subtitulo.textContent = `${nombrePacienteActivo()} · Semana del ${inicioISO} al ${finISO}`;
+  titulo.textContent = "🩺 Informe completo para la médica";
+  subtitulo.textContent = `${nombrePacienteActivo()} · Periodo del ${inicioISO} al ${finISO}`;
 
-  const diasHTML = Array.from({ length:7 }, (_, i) => {
-    const fecha = formatoFechaISO(sumarDiasFecha(inicio, i));
+  const diasHTML = Array.from({ length:rango.dias }, (_, i) => {
+    const fecha = formatoFechaISO(sumarDiasFecha(rango.inicio, i));
     const r = mapaRegistros.get(fecha);
     const citasDia = citas.filter(c => c.fecha === fecha);
     const citasTexto = citasDia.length
@@ -2747,8 +2791,8 @@ function renderInformeSemanaMedica(registros, citas, inicio, fin) {
 
   contenido.innerHTML = `
     <div class="informe-grid">
-      <div class="informe-card">Días registrados<strong>${a.total}</strong><span>de 7 días de la semana</span></div>
-      <div class="informe-card">Citas en la semana<strong>${citas.length}</strong><span>No se incluyen comentarios médicos internos</span></div>
+      <div class="informe-card">Días registrados<strong>${a.total}</strong><span>de ${rango.dias} día(s) seleccionados</span></div>
+      <div class="informe-card">Citas en el periodo<strong>${citas.length}</strong><span>No se incluyen comentarios médicos internos</span></div>
       <div class="informe-card">Emoción final dominante<strong>${escaparHTML(emocionFinTop)}</strong><span>${emocionFinTopN} día(s)</span></div>
       <div class="informe-card">Saciedad dominante<strong>${escaparHTML(traducirSaciedad(saciedadTop))}</strong><span>${saciedadTopN} registro(s)</span></div>
       <div class="informe-card">Días con ejercicio<strong>${a.diasConEjercicio}</strong><span>${a.minutosEjercicio} minutos totales</span></div>
@@ -2756,7 +2800,7 @@ function renderInformeSemanaMedica(registros, citas, inicio, fin) {
     </div>
 
     <div class="${conclusion.tipo}">
-      <strong>Lectura semanal:</strong> ${conclusion.texto}
+      <strong>Lectura del periodo:</strong> ${conclusion.texto}
     </div>
 
     <div class="informe-graficas">
@@ -2766,7 +2810,7 @@ function renderInformeSemanaMedica(registros, citas, inicio, fin) {
       <div class="grafica-box"><h4>Lugar de comida/cena</h4><canvas id="graficaSemanaLugar" width="600" height="280"></canvas></div>
     </div>
 
-    <h4>Resumen de hábitos de la semana</h4>
+    <h4>Resumen de hábitos del periodo</h4>
     <table class="tabla-informe">
       <tr><th>Indicador</th><th>Resultado</th></tr>
       <tr><td>Emoción al iniciar</td><td>${objetoATexto(a.emocionesInicio)}</td></tr>
